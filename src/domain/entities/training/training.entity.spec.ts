@@ -5,6 +5,8 @@ import { randomUUID } from 'crypto';
 import { TrainingName } from '../shared/vos/training-name';
 import { InvalidTrainingNameError } from '../shared/errors/invalid-training-name-error';
 import { RequiredFieldError } from '../shared/errors/required-field-error';
+import { faker } from '@faker-js/faker';
+import { ScheduleEntity } from '../schedule';
 
 type CreateTrainingDto = {
   name: string;
@@ -17,6 +19,7 @@ class TrainingEntity implements IEntity {
   private _name: TrainingName;
   private _description: string;
   private _user: string;
+  private _schedules: ScheduleEntity[];
 
   constructor(
     either: Either<EntityError, TrainingEntity>,
@@ -50,6 +53,9 @@ class TrainingEntity implements IEntity {
   get user(): string {
     return this._user;
   }
+  get schedules(): ScheduleEntity[] {
+    return this._schedules;
+  }
 
   static create(data: CreateTrainingDto): Either<EntityError, TrainingEntity> {
     const either = new Either<EntityError, TrainingEntity>();
@@ -58,6 +64,14 @@ class TrainingEntity implements IEntity {
       new TrainingEntity(either, data.name, data.description, data.user),
     );
     return either;
+  }
+
+  planning(schedules: any[]): void {
+    const schedulesOrError = schedules.map((schedule) =>
+      ScheduleEntity.create(schedule),
+    );
+
+    this._schedules = schedulesOrError.map((schedule) => schedule.data);
   }
 }
 
@@ -101,5 +115,27 @@ describe('TrainingEntity', () => {
     const trainingOrError = TrainingEntity.create(data);
 
     expect(trainingOrError.errors[0]).toEqual(new RequiredFieldError('user'));
+  });
+
+  it('ensure training is possible to planning', () => {
+    const data = {
+      name: 'Training 1',
+      description: 'Description of training',
+      user: 'user1',
+    };
+
+    const trainingEntity = TrainingEntity.create(data).data;
+
+    trainingEntity.planning([
+      {
+        id: 'id',
+        startDate: faker.date.future(),
+        endDate: faker.date.future(),
+        location: 'location 1',
+        participants: ['user1'],
+      },
+    ]);
+
+    expect(trainingEntity.schedules.length).toBe(1);
   });
 });

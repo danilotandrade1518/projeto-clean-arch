@@ -8,9 +8,9 @@ Criar novos usuários:
     ✔ senha deve ter no mínimo 6 caracteres @done(24-03-21 22:47)
  
 Criar novo treinamento:
-    ☐ treinamento deve ter nome, descrição e usuário que o criou
-    ☐ nome deve ter no mínimo 3 caracteres
-    ☐ usuário que o criou deve ser um usuário existente
+    ✔ treinamento deve ter nome, descrição e usuário que o criou @done(24-03-22 16:16)
+    ✔ nome deve ter no mínimo 3 caracteres @done(24-03-22 16:20)
+    ✔ usuário que o criou deve ser um usuário existente @done(24-03-22 16:21)
  
 Planejar treinamento:
     ✔ cada agendamento deverá ter data de início, data de término, local, usuários que irão participar do agendamento @done(24-03-21 23:10)
