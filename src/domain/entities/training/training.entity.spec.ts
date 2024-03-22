@@ -15,6 +15,7 @@ type CreateTrainingDto = {
 };
 
 class TrainingEntity implements IEntity {
+  private _either: Either<EntityError, TrainingEntity>;
   private _id: string;
   private _name: TrainingName;
   private _description: string;
@@ -27,6 +28,8 @@ class TrainingEntity implements IEntity {
     description: string,
     user: string,
   ) {
+    this._either = either;
+
     this._id = randomUUID();
 
     if (!user) either.addError(new RequiredFieldError('user'));
@@ -69,6 +72,10 @@ class TrainingEntity implements IEntity {
   planning(schedules: any[]): void {
     const schedulesOrError = schedules.map((schedule) =>
       ScheduleEntity.create(schedule),
+    );
+
+    schedulesOrError.forEach((scheduleOrError) =>
+      this._either.addManyErrors(scheduleOrError.errors),
     );
 
     this._schedules = schedulesOrError.map((schedule) => schedule.data);
@@ -137,5 +144,31 @@ describe('TrainingEntity', () => {
     ]);
 
     expect(trainingEntity.schedules.length).toBe(1);
+  });
+
+  it('ensure hasError when planning with invalid schedule', () => {
+    const data = {
+      name: 'Training 1',
+      description: 'Description of training',
+      user: 'user1',
+    };
+
+    const trainingOrError = TrainingEntity.create(data);
+
+    const trainingEntity = trainingOrError.data;
+
+    const invalidScheduleData = [
+      {
+        id: 'id',
+        startDate: faker.date.past(),
+        endDate: faker.date.future(),
+        location: 'location 1',
+        participants: ['user1'],
+      },
+    ];
+
+    trainingEntity.planning(invalidScheduleData);
+
+    expect(trainingOrError.hasError).toBeTruthy();
   });
 });
