@@ -1,20 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { randomUUID } from 'crypto';
 
-import { CreateScheduleDto, ScheduleEntity } from '.';
+import { ScheduleEntity } from '.';
 import { InvalidDateError } from '../shared/errors/invalid-date-error';
-
-const mockCreateScheduleDto = (): CreateScheduleDto => {
-  const startDate = faker.date.future();
-
-  return {
-    startDate,
-    endDate: faker.date.future({ refDate: startDate }),
-    location: faker.location.city(),
-    participants: [randomUUID()],
-    training: randomUUID(),
-  };
-};
+import { mockCreateScheduleDto } from '../shared/tests/mocks/mock-create-schedule-dto';
 
 describe('Schedule Entity', () => {
   it('should create schedule entity', () => {
