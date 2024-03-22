@@ -18,7 +18,7 @@ Planejar treinamento:
     ✔ data de término deve ser maior que a data de início @done(24-03-21 23:13)
     ✔ usuários que irão participar do agendamento devem ser usuários existentes @done(24-03-21 23:13)
     ✔ será efetuado para um treinamento existente @done(24-03-21 23:14)
-    ☐ poderá ter 1 ou vários agendamentos para o treinamento
+    ✔ poderá ter 1 ou vários agendamentos para o treinamento @done(24-03-22 16:33)
  
 Executar agendamento:    
     ☐ deverá informar agendamento, participantes, instrutor e data de execução
