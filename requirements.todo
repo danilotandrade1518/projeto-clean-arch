@@ -1,11 +1,11 @@
 - Sistema para treinamentos
  
 Criar novos usuários:
-    ☐ usuário deve ter nome, email, cpf, senha
-    ☐ nome deve ter no mínimo 2 palavras(nome e sobrenome)
-    ☐ email deve ser um email válido
-    ☐ cpf deve ser um cpf válido
-    ☐ senha deve ter no mínimo 6 caracteres
+    ✔ usuário deve ter nome, email, cpf, senha @done(24-03-21 22:41)
+    ✔ nome deve ter no mínimo 2 palavras(nome e sobrenome) @done(24-03-21 22:44)
+    ✔ email deve ser um email válido @done(24-03-21 22:45)
+    ✔ cpf deve ser um cpf válido @done(24-03-21 22:46)
+    ✔ senha deve ter no mínimo 6 caracteres @done(24-03-21 22:47)
  
 Criar novo treinamento:
     ☐ treinamento deve ter nome, descrição e usuário que o criou
@@ -13,12 +13,12 @@ Criar novo treinamento:
     ☐ usuário que o criou deve ser um usuário existente
  
 Planejar treinamento:
-    ☐ será efetuado para um treinamento existente
+    ✔ cada agendamento deverá ter data de início, data de término, local, usuários que irão participar do agendamento @done(24-03-21 23:10)
+    ✔ data de início deve ser maior que a data atual @done(24-03-21 23:12)
+    ✔ data de término deve ser maior que a data de início @done(24-03-21 23:13)
+    ✔ usuários que irão participar do agendamento devem ser usuários existentes @done(24-03-21 23:13)
+    ✔ será efetuado para um treinamento existente @done(24-03-21 23:14)
     ☐ poderá ter 1 ou vários agendamentos para o treinamento
-    ☐ cada agendamento deverá ter data de início, data de término, local, usuários que irão participar do agendamento
-    ☐ data de início deve ser maior que a data atual
-    ☐ data de término deve ser maior que a data de início
-    ☐ usuários que irão participar do agendamento devem ser usuários existentes
  
 Executar agendamento:    
     ☐ deverá informar agendamento, participantes, instrutor e data de execução
