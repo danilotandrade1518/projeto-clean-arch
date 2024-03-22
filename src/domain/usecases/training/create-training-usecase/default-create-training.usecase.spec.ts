@@ -14,7 +14,9 @@ class DefaultCreateTrainingUsecase implements ICreateTrainingUsecase {
   async execute(params: CreateTrainingDto) {
     const either = new Either<UsecaseError, ICreateTrainingUsecaseResult>();
 
-    TrainingEntity.create(params);
+    const trainingOrError = TrainingEntity.create(params);
+
+    either.addManyErrors(trainingOrError.errors);
 
     either.setData({
       id: null,
@@ -52,5 +54,19 @@ describe('DefaultCreateTrainingUsecase', () => {
     (await createTrainingUsecase.execute(data)).data;
 
     expect(trainingEntitySpy).toHaveBeenCalledWith(data);
+  });
+
+  it('ensure hasError when invalida data are passed to Entity', async () => {
+    const createTrainingUsecase = new DefaultCreateTrainingUsecase();
+
+    const invalidData = {
+      name: 'ab',
+      description: 'Description of training',
+      user: 'user1',
+    };
+
+    const result = await createTrainingUsecase.execute(invalidData);
+
+    expect(result.hasError).toBeTruthy();
   });
 });
