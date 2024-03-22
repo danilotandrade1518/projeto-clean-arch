@@ -24,6 +24,7 @@ export class FutureDate implements IVo<Date, Date> {
     today.setHours(23, 59, 59, 0);
 
     const isValid = compareDate.getTime() > today.getTime();
+
     if (!isValid) throw new InvalidDateError(value.toLocaleString());
   }
 }

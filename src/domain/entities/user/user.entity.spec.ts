@@ -1,17 +1,10 @@
-import { faker } from '@faker-js/faker';
+import { mockCreateUserDto } from '@/entities/shared/tests/mocks/mock-create-user-dto';
 
-import { CreateUserDto, UserEntity } from '.';
+import { UserEntity } from '.';
 import { InvalidCpfError } from '../shared/errors/invalid-cpf-error';
 import { InvalidEmailError } from '../shared/errors/invalid-email-error';
 import { InvalidPasswordError } from '../shared/errors/invalid-password-error';
 import { InvalidPersonNameError } from '../shared/errors/invalid-person-name-error';
-
-const mockCreateUserDto = (): CreateUserDto => ({
-  name: faker.person.fullName(),
-  email: faker.internet.email(),
-  cpf: '11322627630',
-  password: faker.internet.password(),
-});
 
 describe('User Entity', () => {
   it('should create user entity', () => {
