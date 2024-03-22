@@ -4,6 +4,7 @@ import { EntityError } from '../shared/errors/entity-error';
 import { randomUUID } from 'crypto';
 import { TrainingName } from '../shared/vos/training-name';
 import { InvalidTrainingNameError } from '../shared/errors/invalid-training-name-error';
+import { RequiredFieldError } from '../shared/errors/required-field-error';
 
 type CreateTrainingDto = {
   name: string;
@@ -24,6 +25,8 @@ class TrainingEntity implements IEntity {
     user: string,
   ) {
     this._id = randomUUID();
+
+    if (!user) either.addError(new RequiredFieldError('user'));
 
     try {
       this._name = new TrainingName(name);
@@ -86,5 +89,17 @@ describe('TrainingEntity', () => {
     expect(trainingOrError.errors[0]).toEqual(
       new InvalidTrainingNameError(data.name),
     );
+  });
+
+  it('should hasError when user is empty', () => {
+    const data = {
+      name: 'Training 1',
+      description: 'Description of training',
+      user: '',
+    };
+
+    const trainingOrError = TrainingEntity.create(data);
+
+    expect(trainingOrError.errors[0]).toEqual(new RequiredFieldError('user'));
   });
 });
