@@ -2,6 +2,8 @@ import { Either } from '@/utils/either';
 import { IEntity } from '../entity';
 import { EntityError } from '../shared/errors/entity-error';
 import { randomUUID } from 'crypto';
+import { TrainingName } from '../shared/vos/training-name';
+import { InvalidTrainingNameError } from '../shared/errors/invalid-training-name-error';
 
 type CreateTrainingDto = {
   name: string;
@@ -11,13 +13,24 @@ type CreateTrainingDto = {
 
 class TrainingEntity implements IEntity {
   private _id: string;
-  private _name: string;
+  private _name: TrainingName;
   private _description: string;
   private _user: string;
 
-  constructor(name: string, description: string, user: string) {
+  constructor(
+    either: Either<EntityError, TrainingEntity>,
+    name: string,
+    description: string,
+    user: string,
+  ) {
     this._id = randomUUID();
-    this._name = name;
+
+    try {
+      this._name = new TrainingName(name);
+    } catch (error) {
+      either.addError(error);
+    }
+
     this._description = description;
     this._user = user;
   }
@@ -25,7 +38,7 @@ class TrainingEntity implements IEntity {
   get id(): string {
     return this._id;
   }
-  get name(): string {
+  get name(): TrainingName {
     return this._name;
   }
   get description(): string {
@@ -38,7 +51,9 @@ class TrainingEntity implements IEntity {
   static create(data: CreateTrainingDto): Either<EntityError, TrainingEntity> {
     const either = new Either<EntityError, TrainingEntity>();
 
-    either.setData(new TrainingEntity(data.name, data.description, data.user));
+    either.setData(
+      new TrainingEntity(either, data.name, data.description, data.user),
+    );
     return either;
   }
 }
@@ -54,8 +69,22 @@ describe('TrainingEntity', () => {
     const trainingEntity = TrainingEntity.create(data).data;
 
     expect(trainingEntity.id).toBeDefined();
-    expect(trainingEntity.name).toEqual(data.name);
+    expect(trainingEntity.name.value).toEqual(data.name);
     expect(trainingEntity.description).toEqual(data.description);
     expect(trainingEntity.user).toEqual(data.user);
+  });
+
+  it('should hasErros when invalid name is provided', () => {
+    const data = {
+      name: 'ab',
+      description: 'Description of training',
+      user: 'user1',
+    };
+
+    const trainingOrError = TrainingEntity.create(data);
+
+    expect(trainingOrError.errors[0]).toEqual(
+      new InvalidTrainingNameError(data.name),
+    );
   });
 });
